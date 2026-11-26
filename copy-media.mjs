@@ -1,0 +1,51 @@
+import fs from 'fs'; import path from 'path';
+const src='content_input', dst='public/media';
+const map = {
+ 'photos/avatar.JPG':'photos/avatar.jpg','photos/about.JPEG':'photos/about.jpg',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/1 пост.jpg':'aktiv/post-1.jpg',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/2 пост.jpg':'aktiv/post-2.jpg',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/3 пост.jpg':'aktiv/post-3.jpg',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/5 пост.jpg':'aktiv/post-5.jpg',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/IMG_7127.JPG':'aktiv/post-6.jpg',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/Статистика по видео.jpg':'aktiv/stats.jpg',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/Автоматы_9К_просмотров_compross.mp4':'aktiv/avtomaty-9k.mp4',
+ 'cases_media/AktivPark_Videos_and_Posts_and_Statistics/Выпускной_11К_Просмотров_compross.mp4':'aktiv/vypusknoy-11k.mp4',
+ 'cases_media/My_Blog/SkillsVideoEditing/IMG_7157_compross.mp4':'blog/edit-1.mp4',
+ 'cases_media/My_Blog/SkillsVideoEditing/IMG_7158_compross.mp4':'blog/edit-2.mp4',
+ 'cases_media/My_Blog/Statistics_Insta/Statistics1.jpg':'blog/insta-stats-shampoo.jpg',
+ 'cases_media/My_Blog/Statistics_Insta/Statistics2.jpg':'blog/insta-stats-vintage.jpg',
+ 'cases_media/My_Blog/Statistics_Insta/Statistics_Винтаж_Ева.jpg':'blog/insta-vintage-eva.jpg',
+ 'cases_media/My_Blog/Statistics_TikTok/befree.jpg':'blog/tt-stats-befree.jpg',
+ 'cases_media/My_Blog/Statistics_TikTok/ПоступлениеВУЗ.jpg':'blog/tt-stats-vuz.jpg',
+ 'cases_media/My_Blog/Statistics_TikTok/СериаДобропожаловатьвДерри.jpg':'blog/tt-stats-derry.jpg',
+ 'cases_media/My_Blog/Statistics_TikTok/Чтослучилосьнасьемках.jpg':'blog/tt-stats-syomki.jpg',
+ 'cases_media/My_Blog/Videos_Instagram/IMG_7161_compross.mp4':'blog/insta-1.mp4',
+ 'cases_media/My_Blog/Videos_Instagram/IMG_7163_compross.mp4':'blog/insta-2.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/ДоброПожаловатьВДерри_compross.mp4':'blog/tt-derry.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/ИсторияПоступления_compross.mp4':'blog/tt-vuz.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/КороткоеВидео2_compross.mp4':'blog/tt-short-2.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/КороткоеВидео_compross.mp4':'blog/tt-short-1.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/МаркетингТвояВозможность_compross.mp4':'blog/tt-marketing.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/ОбзорБиФрии_compross.mp4':'blog/tt-befree.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/ТвойВкусНеОбязанНравиться_compross.mp4':'blog/tt-taste.mp4',
+ 'cases_media/My_Blog/Videos_TikTok/ЧтоСлучилосьНаСьемках_compross.mp4':'blog/tt-syomki.mp4',
+ 'cases_media/School_Series/1episode_compross.mp4':'series/ep-1.mp4',
+ 'cases_media/School_Series/2episode_compross.mp4':'series/ep-2.mp4',
+ 'cases_media/School_Series/3epidose_compross.mp4':'series/ep-3.mp4',
+ 'cases_media/School_Series/Intro_compross.mp4':'series/intro.mp4',
+ 'cases_media/School_Series/Statistics/1серия.jpg':'series/stats-1.jpg',
+ 'cases_media/School_Series/Statistics/2серия.jpg':'series/stats-2.jpg',
+ 'cases_media/School_Series/Statistics/3 серия.jpg':'series/stats-3.jpg',
+ 'cases_media/ShopClub_Videos/Промо_compross.mp4':'shopclub/promo.mp4',
+ 'cases_media/ShopClub_Videos/ЧтоОнСкрывает_compross.mp4':'shopclub/chto-skryvaet.mp4',
+ 'cases_media/ShopClub_Videos/Эхо_Двор_compross.mp4':'shopclub/echo-dvor.mp4',
+ 'cases_media/StudentProjects/AIVideo_compross.mp4':'students/ai-video.mp4',
+ 'cases_media/StudentProjects/JustPractice_compross.mp4':'students/just-practice.mp4',
+ 'cases_media/StudentProjects/Politech_Promo2026_compross.mp4':'students/politech-promo.mp4',
+ 'cases_media/StudentProjects/PromoFeniks2024_compross.mp4':'students/feniks-2024.mp4',
+};
+function find(rel){ // locate by normalized path
+  const parts=rel.split('/'); let cur=src;
+  for(const p of parts){ const hit=fs.readdirSync(cur).find(f=>f.normalize('NFC')===p.normalize('NFC')); if(!hit) throw new Error('missing '+rel); cur=path.join(cur,hit);} return cur; }
+for(const [k,v] of Object.entries(map)){ const o=path.join(dst,v); fs.mkdirSync(path.dirname(o),{recursive:true}); fs.copyFileSync(find(k),o); }
+console.log('copied',Object.keys(map).length);
